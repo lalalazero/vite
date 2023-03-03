@@ -1,14 +1,14 @@
 {
   "scripts": {
-    "dev": "vite --debug",
+    "dev": "vite --debug hmr",
     "build": "vite build --debug",
     "serve": "serve dist"
   },
   "dependencies": {
+    "@babel/runtime": "link:../node_modules/@babel/runtime",
     "bootstrap": "link:../node_modules/bootstrap",
     "lodash-es": "link:../node_modules/lodash-es",
     "moment": "link:../node_modules/moment",
-    "@babel/runtime": "link:../node_modules/@babel/runtime",
     "normalize.css": "link:../node_modules/normalize.css",
     "optimize-linked": "link:./optimize-linked",
     "resolve-browser-field-test-package": "link:./resolve/browser-field",

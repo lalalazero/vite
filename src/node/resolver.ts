@@ -9,14 +9,14 @@ import {
   parseNodeModuleId
 } from './utils'
 import {
-  moduleRE,
-  moduleIdToFileMap,
-  moduleFileToIdMap
+  moduleRE
+  // moduleIdToFileMap,
+  // moduleFileToIdMap
 } from './server/serverPluginModuleResolve'
-import { resolveOptimizedCacheDir } from './optimizer'
+// import { resolveOptimizedCacheDir } from './optimizer'
 import { clientPublicPath } from './server/serverPluginClient'
 import chalk from 'chalk'
-import { isAsset } from './optimizer/pluginAssets'
+// import { isAsset } from './optimizer/pluginAssets'
 
 const debug = require('debug')('vite:resolve')
 const isWin = require('os').platform() === 'win32'
@@ -46,19 +46,19 @@ export const mainFields = ['module', 'jsnext', 'jsnext:main', 'browser', 'main']
 const defaultRequestToFile = (publicPath: string, root: string): string => {
   if (moduleRE.test(publicPath)) {
     const id = publicPath.replace(moduleRE, '')
-    const cachedNodeModule = moduleIdToFileMap.get(id)
-    if (cachedNodeModule) {
-      return cachedNodeModule
-    }
+    // const cachedNodeModule = moduleIdToFileMap.get(id)
+    // if (cachedNodeModule) {
+    //   return cachedNodeModule
+    // }
     // try to resolve from optimized modules
-    const optimizedModule = resolveOptimizedModule(root, id)
-    if (optimizedModule) {
-      return optimizedModule
-    }
+    // const optimizedModule = resolveOptimizedModule(root, id)
+    // if (optimizedModule) {
+    //   return optimizedModule
+    // }
     // try to resolve from normal node_modules
     const nodeModule = resolveNodeModuleFile(root, id)
     if (nodeModule) {
-      moduleIdToFileMap.set(id, nodeModule)
+      // moduleIdToFileMap.set(id, nodeModule)
       return nodeModule
     }
   }
@@ -70,7 +70,7 @@ const defaultRequestToFile = (publicPath: string, root: string): string => {
 }
 
 const defaultFileToRequest = (filePath: string, root: string): string =>
-  moduleFileToIdMap.get(filePath) ||
+  // moduleFileToIdMap.get(filePath) ||
   '/' + slash(path.relative(root, filePath)).replace(/^public\//, '')
 
 const isFile = (file: string): boolean => {
@@ -239,13 +239,13 @@ export function createResolver(
       }
 
       const filePath = resolver.requestToFile(cleanPublicPath)
-      const cacheDir = resolveOptimizedCacheDir(root)
-      if (cacheDir) {
-        const relative = path.relative(cacheDir, filePath)
-        if (!relative.startsWith('..')) {
-          return finalize(path.posix.join('/@modules/', slash(relative)))
-        }
-      }
+      // const cacheDir = resolveOptimizedCacheDir(root)
+      // if (cacheDir) {
+      //   const relative = path.relative(cacheDir, filePath)
+      //   if (!relative.startsWith('..')) {
+      //     return finalize(path.posix.join('/@modules/', slash(relative)))
+      //   }
+      // }
 
       // fileToRequest doesn't work with files in node_modules
       // because of edge cases like symlinks or yarn-aliased-install
@@ -349,14 +349,14 @@ export function resolveBareModuleRequest(
   importer: string,
   resolver: InternalResolver
 ): string {
-  const optimized = resolveOptimizedModule(root, id)
-  if (optimized) {
-    // ensure optimized module requests always ends with `.js` - this is because
-    // optimized deps may import one another and in the built bundle their
-    // relative import paths ends with `.js`. If we don't append `.js` during
-    // rewrites, it may result in duplicated copies of the same dep.
-    return path.extname(id) === '.js' ? id : id + '.js'
-  }
+  // const optimized = resolveOptimizedModule(root, id)
+  // if (optimized) {
+  //   // ensure optimized module requests always ends with `.js` - this is because
+  //   // optimized deps may import one another and in the built bundle their
+  //   // relative import paths ends with `.js`. If we don't append `.js` during
+  //   // rewrites, it may result in duplicated copies of the same dep.
+  //   return path.extname(id) === '.js' ? id : id + '.js'
+  // }
 
   let isEntry = false
   const basedir = path.dirname(resolver.requestToFile(importer))
@@ -379,31 +379,31 @@ export function resolveBareModuleRequest(
     const deepMatch = !isEntry && id.match(deepImportRE)
     if (deepMatch) {
       // deep import
-      const depId = deepMatch[1] || deepMatch[2]
+      // const depId = deepMatch[1] || deepMatch[2]
 
       // check if this is a deep import to an optimized dep.
-      if (resolveOptimizedModule(root, depId)) {
-        if (resolver.alias(depId) === id) {
-          // this is a deep import but aliased from a bare module id.
-          // redirect it the optimized copy.
-          return resolveBareModuleRequest(root, depId, importer, resolver)
-        }
-        if (!isAsset(id)) {
-          // warn against deep imports to optimized dep
-          console.error(
-            chalk.yellow(
-              `\n[vite] Avoid deep import "${id}" (imported by ${importer})\n` +
-                `because "${depId}" has been pre-optimized by vite into a single file.\n` +
-                `Prefer importing directly from the module entry:\n` +
-                chalk.cyan(`\n  import { ... } from "${depId}" \n\n`) +
-                `If the dependency requires deep import to function properly, \n` +
-                `add the deep path to ${chalk.cyan(
-                  `optimizeDeps.include`
-                )} in vite.config.js.\n`
-            )
-          )
-        }
-      }
+      // if (resolveOptimizedModule(root, depId)) {
+      //   if (resolver.alias(depId) === id) {
+      //     // this is a deep import but aliased from a bare module id.
+      //     // redirect it the optimized copy.
+      //     return resolveBareModuleRequest(root, depId, importer, resolver)
+      //   }
+      //   if (!isAsset(id)) {
+      //     // warn against deep imports to optimized dep
+      //     console.error(
+      //       chalk.yellow(
+      //         `\n[vite] Avoid deep import "${id}" (imported by ${importer})\n` +
+      //           `because "${depId}" has been pre-optimized by vite into a single file.\n` +
+      //           `Prefer importing directly from the module entry:\n` +
+      //           chalk.cyan(`\n  import { ... } from "${depId}" \n\n`) +
+      //           `If the dependency requires deep import to function properly, \n` +
+      //           `add the deep path to ${chalk.cyan(
+      //             `optimizeDeps.include`
+      //           )} in vite.config.js.\n`
+      //       )
+      //     )
+      //   }
+      // }
 
       // resolve ext for deepImport
       const filePath = resolveNodeModuleFile(root, id)
@@ -428,38 +428,38 @@ export function resolveBareModuleRequest(
   }
 }
 
-const viteOptimizedMap = new Map()
+// const viteOptimizedMap = new Map()
 
-export function resolveOptimizedModule(
-  root: string,
-  id: string
-): string | undefined {
-  const cacheKey = `${root}#${id}`
-  const cached = viteOptimizedMap.get(cacheKey)
-  if (cached) {
-    return cached
-  }
+// export function resolveOptimizedModule(
+//   root: string,
+//   id: string
+// ): string | undefined {
+//   const cacheKey = `${root}#${id}`
+//   const cached = viteOptimizedMap.get(cacheKey)
+//   if (cached) {
+//     return cached
+//   }
 
-  const cacheDir = resolveOptimizedCacheDir(root)
-  if (!cacheDir) return
+//   const cacheDir = resolveOptimizedCacheDir(root)
+//   if (!cacheDir) return
 
-  const tryResolve = (file: string) => {
-    file = path.join(cacheDir, file)
-    if (fs.existsSync(file) && fs.statSync(file).isFile()) {
-      viteOptimizedMap.set(cacheKey, file)
-      return file
-    }
-  }
+//   const tryResolve = (file: string) => {
+//     file = path.join(cacheDir, file)
+//     if (fs.existsSync(file) && fs.statSync(file).isFile()) {
+//       viteOptimizedMap.set(cacheKey, file)
+//       return file
+//     }
+//   }
 
-  return tryResolve(id) || tryResolve(id + '.js')
-}
+//   return tryResolve(id) || tryResolve(id + '.js')
+// }
 
 interface NodeModuleInfo {
   entry: string | undefined
   entryFilePath: string | undefined
   pkg: any
 }
-const nodeModulesInfoMap = new Map<string, NodeModuleInfo>()
+// const nodeModulesInfoMap = new Map<string, NodeModuleInfo>()
 const nodeModulesFileMap = new Map()
 
 export function resolveNodeModule(
@@ -467,11 +467,11 @@ export function resolveNodeModule(
   id: string,
   resolver: InternalResolver
 ): NodeModuleInfo | undefined {
-  const cacheKey = `${root}#${id}`
-  const cached = nodeModulesInfoMap.get(cacheKey)
-  if (cached) {
-    return cached
-  }
+  // const cacheKey = `${root}#${id}`
+  // const cached = nodeModulesInfoMap.get(cacheKey)
+  // if (cached) {
+  //   return cached
+  // }
   let pkgPath
   try {
     // see if the id is a valid package name
@@ -548,7 +548,7 @@ export function resolveNodeModule(
       entryFilePath,
       pkg
     }
-    nodeModulesInfoMap.set(cacheKey, result)
+    // nodeModulesInfoMap.set(cacheKey, result)
     return result
   }
 }

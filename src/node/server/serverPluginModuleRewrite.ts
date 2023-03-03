@@ -198,7 +198,7 @@ export function rewriteImports(
             importee !== clientPublicPath
           ) {
             currentImportees.add(importee)
-            debugHmr(`        ${importer} imports ${importee}`)
+            debugHmr(`        ${importer} imports ${importee} (rewrite-plugin)`)
             ensureMapEntry(importerMap, importee).add(importer)
           }
         } else if (id !== 'import.meta') {

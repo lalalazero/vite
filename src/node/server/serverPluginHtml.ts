@@ -39,7 +39,7 @@ export const htmlRewritePlugin: ServerPlugin = ({
           const importee = resolver.normalizePublicPath(
             cleanUrl(path.posix.resolve('/', srcAttr[1] || srcAttr[2]))
           )
-          debugHmr(`        ${importer} imports ${importee}`)
+          debugHmr(`        ${importer} imports ${importee} html-plugin`)
           ensureMapEntry(importerMap, importee).add(importer)
         }
         return matched

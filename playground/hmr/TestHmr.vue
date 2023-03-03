@@ -1,5 +1,5 @@
 <template>
-  <h2>Hot Module Replacement</h2>
+  <h2>Hot Module Replacement2222</h2>
   <p>
     <span>
       HMR: click button and edit template part of <code>./TestHmr.vue</code>,
@@ -74,6 +74,7 @@ export default {
   setup() {
     const barValue = ref('bar not loaded')
     const bazValue = ref('baz not loaded')
+    console.log(111)
     const dynamicDataOutlet = ref()
     return {
       count: ref(0),

@@ -4,12 +4,15 @@ import fs from 'fs-extra'
 import { ServerPlugin } from '.'
 import { resolveVue } from '../utils'
 import { URL } from 'url'
-import { resolveOptimizedModule, resolveNodeModuleFile } from '../resolver'
+import {
+  // resolveOptimizedModule,
+  resolveNodeModuleFile
+} from '../resolver'
 
 const debug = require('debug')('vite:resolve')
 
-export const moduleIdToFileMap = new Map()
-export const moduleFileToIdMap = new Map()
+// export const moduleIdToFileMap = new Map()
+// export const moduleFileToIdMap = new Map()
 
 export const moduleRE = /^\/@modules\//
 
@@ -32,8 +35,8 @@ export const moduleResolvePlugin: ServerPlugin = ({ root, app, resolver }) => {
     ctx.type = 'js'
 
     const serve = async (id: string, file: string, type: string) => {
-      moduleIdToFileMap.set(id, file)
-      moduleFileToIdMap.set(file, ctx.path)
+      // moduleIdToFileMap.set(id, file)
+      // moduleFileToIdMap.set(file, ctx.path)
       debug(`(${type}) ${id} -> ${getDebugPath(root, file)}`)
       await ctx.read(file)
       return next()
@@ -45,16 +48,16 @@ export const moduleResolvePlugin: ServerPlugin = ({ root, app, resolver }) => {
     }
 
     // already resolved and cached
-    const cachedPath = moduleIdToFileMap.get(id)
-    if (cachedPath) {
-      return serve(id, cachedPath, 'cached')
-    }
+    // const cachedPath = moduleIdToFileMap.get(id)
+    // if (cachedPath) {
+    //   return serve(id, cachedPath, 'cached')
+    // }
 
     // resolve from vite optimized modules
-    const optimized = resolveOptimizedModule(root, id)
-    if (optimized) {
-      return serve(id, optimized, 'optimized')
-    }
+    // const optimized = resolveOptimizedModule(root, id)
+    // if (optimized) {
+    //   return serve(id, optimized, 'optimized')
+    // }
 
     const referer = ctx.get('referer')
     let importer: string | undefined

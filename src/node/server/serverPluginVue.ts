@@ -369,7 +369,7 @@ async function resolveSrcImport(
   block.content = (await ctx.read(filePath)).toString()
 
   // register HMR import relationship
-  debugHmr(`        ${importer} imports ${importee}`)
+  debugHmr(`        ${importer} imports ${importee} vue-plugin`)
   ensureMapEntry(importerMap, importee).add(ctx.path)
   srcImportMap.set(filePath, ctx.url)
   return filePath
